@@ -1,0 +1,26 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Watch Lists</h2>
+
+    {% for wish_listing in wish_listings %}
+    <div class="card">
+        <a class="btn btn-light" href="{% url 'listing' wish_listing.id %}">
+            <div class="card-body">
+                <div class="row container-fluid">
+                    <div class="col-4">
+                        <img src="{{ wish_listing.image }}" alt = "Auction Item Image" width="100">
+                    </div>
+                    <div class="col-8" style="text-align:left">
+                        <h5>{{ wish_listing.name }}</h5>
+                        <h6>STARTING PRICE: ${{ wish_listing.price }}</h6>
+                        <p>Description: {{ wish_listing.description }}</p>
+                        <p>Created at: {{ wish_listing.timestamp }}</p>
+                        <p>Category: {{ wish_listing.category }}</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+{% endblock %}

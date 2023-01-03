@@ -1,0 +1,14 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Categories</h2>
+    <div class="vstack gap-3">
+        <div class="bg-light mb-3"><a role="button" class="btn btn-light" href="{% url 'category' 'Fashion' %}"><h3>Fashion</h3></a></div>
+        <div class="bg-light mb-3"><a role="button" class="btn btn-light" href="{% url 'category' 'Toys' %}"><h3>Toys</h3></a></div>
+        <div class="bg-light mb-3"><a role="button" class="btn btn-light" href="{% url 'category' 'Electronics' %}"><h3>Electronics</h3></a></div>
+        <div class="bg-light mb-3"><a role="button" class="btn btn-light" href="{% url 'category' 'Home' %}"><h3>Home</h3></a></div>
+        <div class="bg-light mb-3"><a role="button" class="btn btn-light" href="{% url 'category' 'Books' %}"><h3>Books</h3></a></div>
+        <div class="bg-light mb-3"><a role="button" class="btn btn-light" href="{% url 'category' 'Accessories' %}"><h3>Accessories</h3></a></div>
+        <div class="bg-light mb-3"><a role="button" class="btn btn-light" href="{% url 'category' 'Others' %}"><h3>Others</h3></a></div>
+    </div>
+{% endblock %}

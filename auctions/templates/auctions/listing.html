@@ -1,0 +1,116 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2 class="mb-5">LISTING: {{ item.name }}</h2>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-4 text-center">
+                <img src="{{ item.image }}" alt = "Auction Item Image" width="250">
+            </div>
+            <div class="col-8">
+                {% if user.is_authenticated %}
+                    {% if wish %}
+                        <a class="btn btn-light" href="{% url 'add_wish_list' item.id %}">Remove From Watch List</a>
+                    {% else %}
+                        <a class="btn btn-light" href="{% url 'add_wish_list' item.id %}">Add to Watch List</a>
+                    {% endif %}
+                {% endif %}
+                <p>{{ item.description }}</p>
+                <h5>Starting Bid: ${{ item.price }}</h5>
+                {% if highest_price %}
+                    <h5>Highest Bid: ${{ highest_price }}</h5>
+                {% endif %}
+                <h5>Details</h5>
+                <ul>
+                    <li>Created by: {{ item.user }}</li>
+                    <li>Category: {{ item.category }}</li>
+                    <li>Created at: {{ item.timestamp }}</li>
+                </ul>
+                <div>
+                    {% if user.is_authenticated %}
+                        {% if user.username == closeitem.winner %}
+                            <h4>You have won this bidding.</h4>
+                        {% elif user.username != item.user %}
+                            {% if not closeitem %}
+                                {% if bid_count == 0 %}
+                                    <p>No bid so far. Your bid is the current bid.</p>
+                                    <form action="{% url 'listing' item.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="number" name="bid_price" id="bid_price" placeholder="Bidding Price" min="{{ item.price }}">
+                                        <input type="submit" value="Bid">
+                                    </form>
+                                {% else %}
+                                    <p>{{ bid_count }} bid(s) so far. Your bid us the current bid.</p>
+                                    <form action="{% url 'listing' item.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="number" name="bid_price" id="bid_price" placeholder="Bidding Price" min="{{ min_price }}">
+                                        <input type="submit" value="Bid">
+                                    </form>
+                                {% endif %}
+                            {% else %}
+                                <h5>Bid Closed!</h5>
+                                <h6>Winner: {{ closeitem.winner }}</h6>
+                            {% endif %} 
+
+                        {% elif user.username == item.user %}
+                            {% if bid_count == 0 %}
+                                <p>No bid so far.</p>
+                            {% else %}
+                                <p>{{ bid_count }} bid(s) so far.</p>
+                            {% endif %}
+                            {% if not closeitem %}
+                                <a href="{% url 'close' item.id %}" class="btn btn-light">Close Bid</a>
+                            {% else %}
+                                <h5>Bid Closed!</h5>
+                                <h6>Winner: {{ closeitem.winner }}</h6>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        {% if bid_count == 0 %}
+                            <p>No bid so far.</p>
+                        {% else %}
+                            <p>{{ bid_count }} bid(s) so far.</p>
+                        {% endif %} 
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <h5>Comments</h5>
+        <div class="mb-3" style="width: 35rem;">
+            {% if comments %}
+            {% for comment in comments %}
+            <div class="card">
+                <div class="card-body">
+                <h5 class="card-title">{{ comment.user }}</h5>
+                <p class="card-text">{{ comment.comment }}</p>
+                <div class="card-text" style="text-align: right"><small class="text-muted">{{ comment.time }}</small></div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <h6>No Comment Yet!</h6>
+        {% endif %}
+        </div>
+    </div>
+    {% if user.is_authenticated %}
+    <div style="width: 35rem;" class="mb-5">
+        <form action="{% url 'add_comment' item.id %}" method="post">
+            {% csrf_token %}
+            <label for="comment">Your Comments</label>
+            <div class="container-fluid text-center">
+                <div class="row">
+                    <div class="col-10 form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here" name="comment" id="comment"></textarea>
+                    </div>
+                    <div class="col-2"><button type="submit" class="btn btn-secondary mt-3">Submit</button></div>
+                </div>
+            </div>
+            
+            
+        </form>
+    </div>
+    {% endif %}
+    
+{% endblock %}

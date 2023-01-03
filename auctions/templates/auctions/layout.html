@@ -1,0 +1,70 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Auctions{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="navbar bg-light">
+            <div class="container-fluid">
+              <h1 class="navbar-brand">Auctions</h1>
+              <form action="{% url 'search' %}" method="get" class="d-flex" role="search">
+                <input class="form-control me-3" type="search" placeholder="Search" aria-label="Search" name="q">
+                <div class="vr mb-3"></div>
+                <button class="btn btn-outline-secondary" type="submit">Search</button>
+              </form>
+            </div>
+          </nav>
+        <div>
+            {% if user.is_authenticated %}
+            <div class="alert alert-info mb-3" role="alert">
+                Signed in as <strong >{{ user.username }}</strong>.
+            </div>    
+            {% else %}
+            <div class="alert alert-info mb-3" role="alert">
+                Not signed in.
+            </div>
+            {% endif %}
+        </div>
+        <ul class="nav">
+            <li class="nav-item">
+                <a role="button" class="nav-link btn btn-outline-info mx-3 mb-3" href="{% url 'index' %}">Active Listings</a>
+            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a role="button" class="nav-link btn btn-outline-info mx-3" href="{% url 'create_listing' %}">Create Listings</a>
+                </li>
+                <li class="nav-item">
+                    <a role="button" class="nav-link btn btn-outline-info mx-3" href="{% url 'wishlists' %}">Watch List</a>
+                </li>
+                <li class="nav-item">
+                    <a role="button" class="nav-link btn btn-outline-info mx-3" href="{% url 'categories' %}">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a role="button" class="nav-link btn btn-outline-danger mx-3" href="{% url 'logout' %}">Log Out</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a role="button" class="nav-link btn btn-outline-info mx-3" href="{% url 'categories' %}">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a role="button" class="nav-link btn btn-outline-primary mx-3" href="{% url 'login' %}">Log In</a>
+                </li>
+                <li class="nav-item">
+                    <a role="button" class="nav-link btn btn-outline-secondary mx-3" href="{% url 'register' %}">Register</a>
+                </li>
+            {% endif %}
+            {% if message %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+            {% endif %}
+        </ul>
+        <hr>
+        {% block body %}
+        {% endblock %}
+    </body>
+</html>
